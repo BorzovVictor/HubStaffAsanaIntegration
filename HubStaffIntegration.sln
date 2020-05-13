@@ -1,0 +1,37 @@
+﻿
+Microsoft Visual Studio Solution File, Format Version 12.00
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "HI.Api", "HI.Api\HI.Api.csproj", "{D5F58883-ECD4-4E8B-9BBB-8F2F791FE55C}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "HI.Hubstaff", "HI.Hubstaff\HI.Hubstaff.csproj", "{CC0DE8A8-6D1F-4801-A1D3-A9F9631F082E}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "HI.Asana", "HI.Asana\HI.Asana.csproj", "{0D9CCBF0-A159-46C3-8A6C-87FCDA86828C}"
+EndProject
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "src", "src", "{1FAF36CD-BCD2-4DAD-850C-2210D46EEA66}"
+EndProject
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "tests", "tests", "{3EB1DFED-EF1F-46F0-8EFF-D8EC821B60CC}"
+EndProject
+Global
+	GlobalSection(SolutionConfigurationPlatforms) = preSolution
+		Debug|Any CPU = Debug|Any CPU
+		Release|Any CPU = Release|Any CPU
+	EndGlobalSection
+	GlobalSection(ProjectConfigurationPlatforms) = postSolution
+		{D5F58883-ECD4-4E8B-9BBB-8F2F791FE55C}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{D5F58883-ECD4-4E8B-9BBB-8F2F791FE55C}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{D5F58883-ECD4-4E8B-9BBB-8F2F791FE55C}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{D5F58883-ECD4-4E8B-9BBB-8F2F791FE55C}.Release|Any CPU.Build.0 = Release|Any CPU
+		{CC0DE8A8-6D1F-4801-A1D3-A9F9631F082E}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{CC0DE8A8-6D1F-4801-A1D3-A9F9631F082E}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{CC0DE8A8-6D1F-4801-A1D3-A9F9631F082E}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{CC0DE8A8-6D1F-4801-A1D3-A9F9631F082E}.Release|Any CPU.Build.0 = Release|Any CPU
+		{0D9CCBF0-A159-46C3-8A6C-87FCDA86828C}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{0D9CCBF0-A159-46C3-8A6C-87FCDA86828C}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{0D9CCBF0-A159-46C3-8A6C-87FCDA86828C}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{0D9CCBF0-A159-46C3-8A6C-87FCDA86828C}.Release|Any CPU.Build.0 = Release|Any CPU
+	EndGlobalSection
+	GlobalSection(NestedProjects) = preSolution
+		{D5F58883-ECD4-4E8B-9BBB-8F2F791FE55C} = {1FAF36CD-BCD2-4DAD-850C-2210D46EEA66}
+		{0D9CCBF0-A159-46C3-8A6C-87FCDA86828C} = {1FAF36CD-BCD2-4DAD-850C-2210D46EEA66}
+		{CC0DE8A8-6D1F-4801-A1D3-A9F9631F082E} = {1FAF36CD-BCD2-4DAD-850C-2210D46EEA66}
+	EndGlobalSection
+EndGlobal
