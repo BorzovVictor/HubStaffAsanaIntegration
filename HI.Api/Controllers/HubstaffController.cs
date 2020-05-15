@@ -1,6 +1,7 @@
 using System;
 using System.Threading.Tasks;
 using HI.Hubstaff;
+using HI.SharedKernel.Models;
 using Microsoft.AspNetCore.Mvc;
 
 namespace HI.Api.Controllers
@@ -28,6 +29,23 @@ namespace HI.Api.Controllers
             try
             {
                 var result = await service.Tasks(projects, offset);
+                return Ok(result);
+            }
+            catch (Exception e)
+            {
+                return BadRequest(e.GetBaseException().Message);
+            }
+        }
+        
+        [HttpGet("[action]")]
+        public async Task<IActionResult> TeamByMember(
+            [FromServices] IHubstaffService service, 
+            [FromQuery]HsTeamMemberRequest req)
+        {
+            try
+            {
+                var result = await service.GetTasksDurations(req);
+                
                 return Ok(result);
             }
             catch (Exception e)

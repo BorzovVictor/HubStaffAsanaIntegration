@@ -12,13 +12,13 @@ using Newtonsoft.Json.Converters;
 
 namespace HI.SharedKernel.Models
 {
-    public partial class HubstaffAuthModel
+    public partial class HsAuthModel
     {
         [JsonProperty("user")]
-        public HubstaffUser User { get; set; }
+        public HsUser User { get; set; }
     }
 
-    public partial class HubstaffUser
+    public partial class HsUser
     {
         [JsonProperty("id")]
         public long Id { get; set; }
@@ -33,17 +33,17 @@ namespace HI.SharedKernel.Models
         public string AuthToken { get; set; }
     }
 
-    public partial class HubstaffAuthModel
+    public partial class HsAuthModel
     {
-        public static HubstaffAuthModel FromJson(string json) => JsonConvert.DeserializeObject<HubstaffAuthModel>(json, HubstaffConverter.Settings);
+        public static HsAuthModel FromJson(string json) => JsonConvert.DeserializeObject<HsAuthModel>(json, HsConverter.Settings);
     }
 
-    public static class HubstaffSerialize
+    public static class HsSerialize
     {
-        public static string ToJson(this HubstaffAuthModel self) => JsonConvert.SerializeObject(self, HubstaffConverter.Settings);
+        public static string ToJson(this HsAuthModel self) => JsonConvert.SerializeObject(self, HsConverter.Settings);
     }
 
-    internal static class HubstaffConverter
+    internal static class HsConverter
     {
         public static readonly JsonSerializerSettings Settings = new JsonSerializerSettings
         {

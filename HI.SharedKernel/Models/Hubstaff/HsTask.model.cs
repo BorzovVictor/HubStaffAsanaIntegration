@@ -11,7 +11,7 @@ using Newtonsoft.Json.Converters;
 
 namespace HI.SharedKernel.Models
 {
-    public partial class HubstaffTaskModel
+    public partial class HsTaskModel
     {
         [JsonProperty("id")]
         public long? Id { get; set; }
@@ -41,17 +41,17 @@ namespace HI.SharedKernel.Models
         public long? ProjectId { get; set; }
     }
 
-    public partial class HubstaffTaskModel
+    public partial class HsTaskModel
     {
-        public static HubstaffTaskModel FromJson(string json) => JsonConvert.DeserializeObject<HubstaffTaskModel>(json, HubstaffTaskModelConverter.Settings);
+        public static HsTaskModel FromJson(string json) => JsonConvert.DeserializeObject<HsTaskModel>(json, HsTaskModelConverter.Settings);
     }
 
     public static class HubstaffTaskModelSerialize
     {
-        public static string ToJson(this HubstaffTaskModel self) => JsonConvert.SerializeObject(self, HubstaffTaskModelConverter.Settings);
+        public static string ToJson(this HsTaskModel self) => JsonConvert.SerializeObject(self, HsTaskModelConverter.Settings);
     }
 
-    internal static class HubstaffTaskModelConverter
+    internal static class HsTaskModelConverter
     {
         public static readonly JsonSerializerSettings Settings = new JsonSerializerSettings
         {

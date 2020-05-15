@@ -3,9 +3,9 @@ using Newtonsoft.Json;
 
 namespace HI.SharedKernel.Models
 {
-    public class HubstaffTasksModel
+    public class HsTasksModel
     {
         [JsonProperty("tasks")]
-        public List<HubstaffTaskModel> Tasks { get; set; }
+        public List<HsTaskModel> Tasks { get; set; }
     }
 }
