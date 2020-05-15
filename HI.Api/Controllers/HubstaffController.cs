@@ -21,5 +21,19 @@ namespace HI.Api.Controllers
                 return BadRequest(e.GetBaseException().Message);
             }
         }
+        
+        [HttpGet("[action]")]
+        public async Task<IActionResult> Tasks([FromServices] IHubstaffService service)
+        {
+            try
+            {
+                var result = await service.Tasks();
+                return Ok(result);
+            }
+            catch (Exception e)
+            {
+                return BadRequest(e.GetBaseException().Message);
+            }
+        }
     }
 }
