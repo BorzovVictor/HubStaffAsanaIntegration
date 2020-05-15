@@ -1,3 +1,6 @@
+using HI.Api.Extensions;
+using HI.Asana;
+using HI.Hubstaff;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.Extensions.Configuration;
@@ -19,6 +22,24 @@ namespace HI.Api
         public void ConfigureServices(IServiceCollection services)
         {
             services.AddControllers();
+
+            #region singleton configurations
+
+            var hubstaffConfig = new HubstaffSettings();
+            Configuration.Bind("hubstaff", hubstaffConfig);
+            services.AddSingleton(hubstaffConfig);
+            
+            var asanaConfig = new AsanaSettings();
+            Configuration.Bind("asana", asanaConfig);
+            services.AddSingleton(asanaConfig);
+
+            #endregion
+            
+            // configure strongly typed settings objects
+            //services.Configure<AsanaSettings>(Configuration.GetSection("asana"));
+            //services.Configure<HubstaffSettings>(Configuration.GetSection("hubstaff"));
+
+            services.AddProjectServices();
         }
 
         // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.
@@ -29,7 +50,7 @@ namespace HI.Api
                 app.UseDeveloperExceptionPage();
             }
 
-            app.UseHttpsRedirection();
+            // app.UseHttpsRedirection();
 
             app.UseRouting();
 

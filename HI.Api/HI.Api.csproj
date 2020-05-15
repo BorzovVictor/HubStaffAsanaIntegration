@@ -4,5 +4,18 @@
         <TargetFramework>netcoreapp3.1</TargetFramework>
     </PropertyGroup>
 
+    <ItemGroup>
+      <Content Update="appsettings.Development.json">
+        <ExcludeFromSingleFile>true</ExcludeFromSingleFile>
+        <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+        <CopyToPublishDirectory>Never</CopyToPublishDirectory>
+      </Content>
+    </ItemGroup>
+
+    <ItemGroup>
+      <ProjectReference Include="..\HI.Asana\HI.Asana.csproj" />
+      <ProjectReference Include="..\HI.Hubstaff\HI.Hubstaff.csproj" />
+    </ItemGroup>
+
 
 </Project>
