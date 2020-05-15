@@ -23,11 +23,11 @@ namespace HI.Api.Controllers
         }
         
         [HttpGet("[action]")]
-        public async Task<IActionResult> Tasks([FromServices] IHubstaffService service)
+        public async Task<IActionResult> Tasks([FromServices] IHubstaffService service, string projects, int offset)
         {
             try
             {
-                var result = await service.Tasks();
+                var result = await service.Tasks(projects, offset);
                 return Ok(result);
             }
             catch (Exception e)

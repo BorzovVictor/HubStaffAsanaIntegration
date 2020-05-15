@@ -32,24 +32,24 @@ namespace HI.Hubstaff
 
         private object GetHeaders()
         {
+            if (_settings.AuthToken == null)
+                _settings.AuthToken = "QonAICDuVYa8Kvg4_T0gqP8rWMqFPQBKygW011p3R1c";
             return new {App_token = _settings.AppToken, Auth_Token = _settings.AuthToken};
         }
-        
+
         public async Task<List<HubstaffTaskModel>> Tasks(string projects = "", int offset = 0)
         {
-            var url = $"{_settings.BaseUrl}/tasks";
-            var queryParams = new Dictionary<string, object>();
-            if(!string.IsNullOrWhiteSpace(projects))
-                queryParams.Add(nameof(projects), projects.Trim());
-            if(offset>0)
-                queryParams.Add(nameof(offset), offset);
+            var url = _settings.BaseUrl.AppendPathSegment("tasks");
 
-            if (queryParams.Any())
-                url.SetQueryParams(queryParams);
+            if (!string.IsNullOrWhiteSpace(projects))
+                url = url.SetQueryParam("projects", projects);
+            if (offset > 0)
+                url = url.SetQueryParam("offset", offset);
+
             
             var result = await url
                 .WithHeaders(GetHeaders())
-                .GetJsonAsync();
+                .GetJsonAsync<HubstaffTasksModel>();
             return result?.Tasks ?? new List<HubstaffTaskModel>();
         }
     }

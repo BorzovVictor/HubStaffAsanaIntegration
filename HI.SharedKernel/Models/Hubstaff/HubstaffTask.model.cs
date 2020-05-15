@@ -14,10 +14,10 @@ namespace HI.SharedKernel.Models
     public partial class HubstaffTaskModel
     {
         [JsonProperty("id")]
-        public long Id { get; set; }
+        public long? Id { get; set; }
 
         [JsonProperty("integration_id")]
-        public long IntegrationId { get; set; }
+        public long? IntegrationId { get; set; }
 
         [JsonProperty("summary")]
         public string Summary { get; set; }
@@ -32,13 +32,13 @@ namespace HI.SharedKernel.Models
         public string RemoteAlternateId { get; set; }
 
         [JsonProperty("completed_at")]
-        public DateTimeOffset CompletedAt { get; set; }
+        public DateTimeOffset? CompletedAt { get; set; }
 
         [JsonProperty("status")]
         public string Status { get; set; }
 
         [JsonProperty("project_id")]
-        public long ProjectId { get; set; }
+        public long? ProjectId { get; set; }
     }
 
     public partial class HubstaffTaskModel
