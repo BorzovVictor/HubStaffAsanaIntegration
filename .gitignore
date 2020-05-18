@@ -263,3 +263,4 @@ Directory.Build.targets
 Packages.props
 /dist/
 /HI.Api/appsettings.Development.json
+[Ll]ogs/

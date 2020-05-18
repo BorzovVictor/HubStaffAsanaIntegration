@@ -23,43 +23,43 @@ namespace HI.SharedKernel.Models
         public string AssigneeStatus { get; set; }
 
         [JsonProperty("completed")] 
-        public bool Completed { get; set; }
+        public bool? Completed { get; set; }
 
         [JsonProperty("completed_at")] 
-        public object CompletedAt { get; set; }
+        public DateTimeOffset? CompletedAt { get; set; }
 
         [JsonProperty("created_at")] 
-        public DateTimeOffset CreatedAt { get; set; }
+        public DateTimeOffset? CreatedAt { get; set; }
 
         [JsonProperty("custom_fields")] 
         public List<AsanaTaskCustomField> CustomFields { get; set; }
 
         [JsonProperty("due_at")] 
-        public object DueAt { get; set; }
+        public DateTimeOffset? DueAt { get; set; }
 
         [JsonProperty("due_on")] 
-        public DateTimeOffset DueOn { get; set; }
+        public DateTimeOffset? DueOn { get; set; }
 
         [JsonProperty("followers")] 
         public List<AsanaTaskAssignee> Followers { get; set; }
 
         [JsonProperty("hearted")] 
-        public bool Hearted { get; set; }
+        public bool? Hearted { get; set; }
 
         [JsonProperty("hearts")] 
-        public List<object> Hearts { get; set; }
+        public List<AsanaTaskHeart> Hearts { get; set; }
 
         [JsonProperty("liked")] 
         public bool Liked { get; set; }
 
         [JsonProperty("likes")] 
-        public List<object> Likes { get; set; }
+        public List<AsanaTaskHeart> Likes { get; set; }
 
         [JsonProperty("memberships")] 
         public List<AsanaTaskMembership> Memberships { get; set; }
 
         [JsonProperty("modified_at")] 
-        public DateTimeOffset ModifiedAt { get; set; }
+        public DateTimeOffset? ModifiedAt { get; set; }
 
         [JsonProperty("name")] 
         public string Name { get; set; }
@@ -68,13 +68,13 @@ namespace HI.SharedKernel.Models
         public string Notes { get; set; }
 
         [JsonProperty("num_hearts")] 
-        public long NumHearts { get; set; }
+        public long? NumHearts { get; set; }
 
         [JsonProperty("num_likes")] 
-        public long NumLikes { get; set; }
+        public long? NumLikes { get; set; }
 
         [JsonProperty("parent")] 
-        public object Parent { get; set; }
+        public AsanaTaskAssignee Parent { get; set; }
 
         [JsonProperty("projects")] 
         public List<AsanaTaskAssignee> Projects { get; set; }
@@ -83,10 +83,10 @@ namespace HI.SharedKernel.Models
         public string ResourceType { get; set; }
 
         [JsonProperty("start_on")] 
-        public object StartOn { get; set; }
+        public DateTimeOffset? StartOn { get; set; }
 
         [JsonProperty("tags")] 
-        public List<object> Tags { get; set; }
+        public List<AsanaTaskTag> Tags { get; set; }
 
         [JsonProperty("resource_subtype")] 
         public string ResourceSubtype { get; set; }
@@ -97,58 +97,94 @@ namespace HI.SharedKernel.Models
 
     public class AsanaTaskAssignee
     {
-        [JsonProperty("gid")] public string Gid { get; set; }
+        [JsonProperty("gid")] 
+        public string Gid { get; set; }
 
-        [JsonProperty("name")] public string Name { get; set; }
+        [JsonProperty("name")] 
+        public string Name { get; set; }
 
-        [JsonProperty("resource_type")] public string ResourceType { get; set; }
+        [JsonProperty("resource_type")] 
+        public string ResourceType { get; set; }
     }
 
     public class AsanaTaskCustomField
     {
-        [JsonProperty("gid")] public string Gid { get; set; }
+        [JsonProperty("gid")] 
+        public string Gid { get; set; }
 
-        [JsonProperty("enabled")] public bool Enabled { get; set; }
+        [JsonProperty("enabled")] 
+        public bool? Enabled { get; set; }
 
-        [JsonProperty("name")] public string Name { get; set; }
+        [JsonProperty("name")] 
+        public string Name { get; set; }
 
-        [JsonProperty("number_value")] public decimal? NumberValue { get; set; }
+        [JsonProperty("number_value")] 
+        public decimal? NumberValue { get; set; }
 
         [JsonProperty("precision", NullValueHandling = NullValueHandling.Ignore)]
         public long? Precision { get; set; }
 
-        [JsonProperty("resource_subtype")] public string ResourceSubtype { get; set; }
+        [JsonProperty("resource_subtype")] 
+        public string ResourceSubtype { get; set; }
 
-        [JsonProperty("resource_type")] public string ResourceType { get; set; }
+        [JsonProperty("resource_type")] 
+        public string ResourceType { get; set; }
 
-        [JsonProperty("type")] public string Type { get; set; }
+        [JsonProperty("type")] 
+        public string Type { get; set; }
 
         [JsonProperty("enum_options", NullValueHandling = NullValueHandling.Ignore)]
         public List<AsanaTaskEnumOption> EnumOptions { get; set; }
 
-        [JsonProperty("enum_value")] public object EnumValue { get; set; }
+        [JsonProperty("enum_value")] 
+        public AsanaTaskEnumOption EnumValue { get; set; }
     }
 
     public class AsanaTaskEnumOption
     {
-        [JsonProperty("gid")] public string Gid { get; set; }
+        [JsonProperty("gid")] 
+        public string Gid { get; set; }
 
-        [JsonProperty("color")] public string Color { get; set; }
+        [JsonProperty("color")] 
+        public string Color { get; set; }
 
-        [JsonProperty("enabled")] public bool Enabled { get; set; }
+        [JsonProperty("enabled")] 
+        public bool? Enabled { get; set; }
 
-        [JsonProperty("name")] public string Name { get; set; }
+        [JsonProperty("name")] 
+        public string Name { get; set; }
 
-        [JsonProperty("resource_type")] public string ResourceType { get; set; }
+        [JsonProperty("resource_type")] 
+        public string ResourceType { get; set; }
     }
 
     public class AsanaTaskMembership
     {
-        [JsonProperty("project")] public AsanaTaskAssignee Project { get; set; }
+        [JsonProperty("project")] 
+        public AsanaTaskAssignee Project { get; set; }
 
-        [JsonProperty("section")] public AsanaTaskAssignee Section { get; set; }
+        [JsonProperty("section")] 
+        public AsanaTaskAssignee Section { get; set; }
     }
 
+    public class AsanaTaskHeart
+    {
+        [JsonProperty("gid")]
+        public string Gid { get; set; }
+
+        [JsonProperty("user")]
+        public AsanaTaskAssignee User { get; set; }
+    }
+    
+    public class AsanaTaskTag
+    {
+        [JsonProperty("gid")]
+        public string Gid { get; set; }
+
+        [JsonProperty("name")]
+        public string Name { get; set; }
+    }
+    
     public partial class AsanaTaskModel
     {
         public static AsanaTaskModel FromJson(string json) =>
