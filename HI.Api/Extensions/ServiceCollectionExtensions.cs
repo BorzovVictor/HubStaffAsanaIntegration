@@ -1,3 +1,4 @@
+using HI.Api.UseCases;
 using HI.Asana;
 using HI.Hubstaff;
 using Microsoft.Extensions.DependencyInjection;
@@ -10,6 +11,16 @@ namespace HI.Api.Extensions
         {
             services.AddTransient<IAsanaService, AsanaService>();
             services.AddTransient<IHubstaffService, HubstaffService>();
+
+            // useCases
+            services.AddUsesCases();
+            
+            return services;
+        }
+
+        private static IServiceCollection AddUsesCases(this IServiceCollection services)
+        {
+            services.AddTransient<IUpdateSumFieldsCase, UpdateSumFieldsCase>();
 
             return services;
         }

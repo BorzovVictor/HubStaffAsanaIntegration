@@ -11,7 +11,6 @@ namespace HI.Hubstaff
     public class HubstaffService : IHubstaffService
     {
         private readonly HubstaffSettings _settings;
-        private object _headers = null;
 
         public HubstaffService(HubstaffSettings settings)
         {

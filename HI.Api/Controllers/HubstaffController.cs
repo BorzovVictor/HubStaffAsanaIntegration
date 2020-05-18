@@ -1,5 +1,6 @@
 using System;
 using System.Threading.Tasks;
+using HI.Api.UseCases;
 using HI.Hubstaff;
 using HI.SharedKernel.Models;
 using Microsoft.AspNetCore.Mvc;
@@ -47,6 +48,22 @@ namespace HI.Api.Controllers
                 var result = await service.GetTasksDurations(req);
                 
                 return Ok(result);
+            }
+            catch (Exception e)
+            {
+                return BadRequest(e.GetBaseException().Message);
+            }
+        }
+
+        [HttpGet("[action]")]
+        public async Task<IActionResult> UpdateSumFields([FromServices] IUpdateSumFieldsCase service)
+        {
+            try
+            {
+                var result = await service.ExecuteNoUpdate(DateTime.Today.AddDays(-1), DateTime.Today);
+                return result.Succeded
+                    ? (IActionResult) Ok(result.Success)
+                    : BadRequest(result.Failure);
             }
             catch (Exception e)
             {

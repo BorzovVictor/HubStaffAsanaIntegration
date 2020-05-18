@@ -34,7 +34,7 @@ namespace HI.SharedKernel.Models
         public long? TasksDuration { get; set; }
 
         [JsonProperty("users", NullValueHandling = NullValueHandling.Ignore)]
-        public List<HsTeamMemberUser> Users { get; set; }
+        public List<HsTeamMemberUser> Users { get; set; } = new List<HsTeamMemberUser>();
     }
 
     public partial class HsTeamMemberUser
@@ -52,7 +52,7 @@ namespace HI.SharedKernel.Models
         public long? TasksDuration { get; set; }
 
         [JsonProperty("dates", NullValueHandling = NullValueHandling.Ignore)]
-        public List<HsTeamMemberDate> Dates { get; set; }
+        public List<HsTeamMemberDate> Dates { get; set; } = new List<HsTeamMemberDate>();
     }
     
     public partial class HsTeamMemberDate
@@ -67,7 +67,7 @@ namespace HI.SharedKernel.Models
         public long? TasksDuration { get; set; }
 
         [JsonProperty("projects")] 
-        public List<HsTeamMemberProject> Projects { get; set; }
+        public List<HsTeamMemberProject> Projects { get; set; } = new List<HsTeamMemberProject>();
     }
     
     public partial class HsTeamMemberProject
@@ -85,7 +85,7 @@ namespace HI.SharedKernel.Models
         public long? TasksDuration { get; set; }
 
         [JsonProperty("tasks", NullValueHandling = NullValueHandling.Ignore)]
-        public List<HsTeamMemberTask> Tasks { get; set; }
+        public List<HsTeamMemberTask> Tasks { get; set; } = new List<HsTeamMemberTask>();
     }
     
     public partial class HsTeamMemberTask
