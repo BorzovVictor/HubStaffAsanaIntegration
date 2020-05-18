@@ -40,6 +40,8 @@ namespace HI.Api
             //services.Configure<HubstaffSettings>(Configuration.GetSection("hubstaff"));
 
             services.AddProjectServices();
+            
+            services.AddHostedService<HI.Api.Services.BackgroundService>();
         }
 
         // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.

@@ -35,8 +35,8 @@ namespace HI.Api.UseCases
             // get all tasks by period from hubstaff
             var hubReq = new HsTeamMemberRequest
             {
-                StartDate = DateTime.Today.AddDays(-1),
-                EndDate = DateTime.Today,
+                StartDate = start,
+                EndDate = end,
                 ShowTasks = true,
                 ShowActivity = true
             };
@@ -62,10 +62,10 @@ namespace HI.Api.UseCases
             // get all tasks by period from hubstaff
             var hubReq = new HsTeamMemberRequest
             {
-                StartDate = DateTime.Today.AddDays(-1),
-                EndDate = DateTime.Today,
+                StartDate = start,
+                EndDate = end,
                 ShowTasks = true,
-                ShowActivity = true
+                ShowActivity = false
             };
             var hubTasks = await _hubstaffService.GetTasksDurations(hubReq);
             foreach (var hubTask in hubTasks.Where(hubTask =>

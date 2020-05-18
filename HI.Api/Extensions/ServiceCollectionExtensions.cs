@@ -1,3 +1,4 @@
+using HI.Api.Services;
 using HI.Api.UseCases;
 using HI.Asana;
 using HI.Hubstaff;
@@ -11,6 +12,8 @@ namespace HI.Api.Extensions
         {
             services.AddTransient<IAsanaService, AsanaService>();
             services.AddTransient<IHubstaffService, HubstaffService>();
+
+            services.AddTransient<IJsonStoreService, JsonStoreService>();
 
             // useCases
             services.AddUsesCases();

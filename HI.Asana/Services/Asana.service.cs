@@ -40,7 +40,7 @@ namespace HI.Asana
             sumHoursField.NumberValue ??= 0;
             result.SumHoursPreviousValue = sumHoursField.NumberValue.Value;
             result.HubstaffSumHoursValue = ((decimal) sumSeconds / (decimal) 3600);
-            sumHoursField.NumberValue += result.HubstaffSumHoursValue;
+            sumHoursField.NumberValue = result.HubstaffSumHoursValue;
             result.SumHoursNewValue = sumHoursField.NumberValue;
             
             
@@ -71,7 +71,7 @@ namespace HI.Asana
             sumHoursField.NumberValue ??= 0;
             result.SumHoursPreviousValue = sumHoursField.NumberValue.Value;
             result.HubstaffSumHoursValue = ((decimal) sumSeconds / (decimal) 3600);
-            sumHoursField.NumberValue += result.HubstaffSumHoursValue;
+            sumHoursField.NumberValue = result.HubstaffSumHoursValue;
             result.SumHoursNewValue = sumHoursField.NumberValue;
             result.UpdateAt = DateTime.UtcNow;
             return result;
