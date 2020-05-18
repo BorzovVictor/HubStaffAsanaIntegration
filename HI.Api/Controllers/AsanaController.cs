@@ -13,7 +13,6 @@ namespace HI.Api.Controllers
         {
             try
             {
-                throw new Exception("test exception");
                 var data = await service.GetById(taskId);
                 return Json(data);
             }
