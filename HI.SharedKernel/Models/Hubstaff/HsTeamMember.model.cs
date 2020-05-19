@@ -19,7 +19,7 @@ namespace HI.SharedKernel.Models
         [JsonProperty("organizations")] public List<HsOrganization> Organizations { get; set; }
     }
     
-    public partial class HsOrganization
+    public class HsOrganization
     {
         [JsonProperty("id")] 
         public long? Id { get; set; }
@@ -27,6 +27,9 @@ namespace HI.SharedKernel.Models
         [JsonProperty("name")] 
         public string Name { get; set; }
 
+        /// <summary>
+        /// Total task time in seconds
+        /// </summary>
         [JsonProperty("duration")] 
         public long? Duration { get; set; }
 
@@ -37,7 +40,7 @@ namespace HI.SharedKernel.Models
         public List<HsTeamMemberUser> Users { get; set; } = new List<HsTeamMemberUser>();
     }
 
-    public partial class HsTeamMemberUser
+    public class HsTeamMemberUser
     {
         [JsonProperty("id")]
         public long? Id { get; set; }
@@ -55,7 +58,7 @@ namespace HI.SharedKernel.Models
         public List<HsTeamMemberDate> Dates { get; set; } = new List<HsTeamMemberDate>();
     }
     
-    public partial class HsTeamMemberDate
+    public class HsTeamMemberDate
     {
         [JsonProperty("date")] 
         public DateTimeOffset? DateDate { get; set; }
@@ -70,7 +73,7 @@ namespace HI.SharedKernel.Models
         public List<HsTeamMemberProject> Projects { get; set; } = new List<HsTeamMemberProject>();
     }
     
-    public partial class HsTeamMemberProject
+    public class HsTeamMemberProject
     {
         [JsonProperty("id")]
         public long? Id { get; set; }

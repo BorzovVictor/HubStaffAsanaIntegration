@@ -1,8 +1,10 @@
 using HI.Api.Extensions;
+using HI.Api.Services;
 using HI.Asana;
 using HI.Hubstaff;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
+using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
@@ -23,6 +25,9 @@ namespace HI.Api
         {
             services.AddControllers();
 
+            services.AddDbContext<AppDbContext>(options =>
+                options.UseSqlite("Data Source=db.sqlite"));
+            
             #region singleton configurations
 
             var hubstaffConfig = new HubstaffSettings();

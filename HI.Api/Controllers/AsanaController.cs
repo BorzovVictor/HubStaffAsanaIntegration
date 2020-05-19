@@ -21,19 +21,5 @@ namespace HI.Api.Controllers
                 return BadRequest(e.GetBaseException().Message);
             }
         }
-
-        [HttpGet("[action]")]
-        public async Task<IActionResult> UpdateSunHours([FromServices] IAsanaService service)
-        {
-            try
-            {
-                var result = await service.UpdateSumFieldTask("1174870923930519", 3);
-                return Ok(result);
-            }
-            catch (Exception e)
-            {
-                return BadRequest(e.GetBaseException().Message);
-            }
-        }
     }
 }
