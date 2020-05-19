@@ -2,6 +2,8 @@ using System;
 using System.Threading;
 using System.Threading.Tasks;
 using HI.Api.UseCases;
+using HI.Hubstaff;
+using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
 using Microsoft.Extensions.Logging;
@@ -13,22 +15,24 @@ namespace HI.Api.Services
         private readonly IServiceProvider _services;
         private Timer _updateSumHoursFieldTimer;
         private readonly ILogger _logger;
+        private readonly HubstaffSettings _settings;
 
         private static readonly Mutex UpdateSumHoursFieldMutex = new Mutex();
 
-        public BackgroundService(ILogger<BackgroundService> logger,
-            IJsonStoreService jsonStore, IServiceProvider services)
+        public BackgroundService(ILogger<BackgroundService> logger, IServiceProvider services,
+            HubstaffSettings settings)
         {
             _logger = logger;
             _services = services;
+            _settings = settings;
         }
 
         public Task StartAsync(CancellationToken cancellationToken)
         {
             _logger.LogInformation("Background Service is starting.");
-
-            // todo change hours execute value - to get from configurations
-            _updateSumHoursFieldTimer = new Timer(UpdateSumHoursFieldWork, null, TimeSpan.Zero, TimeSpan.FromHours(1));
+            
+            _updateSumHoursFieldTimer = new Timer(UpdateSumHoursFieldWork, null, TimeSpan.Zero,
+                TimeSpan.FromHours(_settings.HoursBetweenCheck));
 
             return Task.CompletedTask;
         }
