@@ -1,13 +1,9 @@
-using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
 using Flurl.Http;
 using HI.SharedKernel.Models;
 using HI.SharedKernel.Models.Asana;
-using HI.SharedKernel.Models.Responses;
-using Microsoft.Extensions.Options;
-using Newtonsoft.Json;
 
 namespace HI.Asana
 {
@@ -27,24 +23,24 @@ namespace HI.Asana
                 .GetJsonAsync<AsanaTaskModel>();
         }
 
-        public async Task<UpdateSumFieldsResult> UpdateSumFieldTask(string taskId, long sumSeconds)
+        public async Task<HistoryData> UpdateSumFieldTask(HsTeamMemberTask hubTask)
         {
-            var result = new UpdateSumFieldsResult();
-            var url = $"{_settings.BaseUrl}/tasks/{taskId}";
-            var task = await GetById(taskId);
+            if ((string.IsNullOrWhiteSpace(hubTask.RemoteId) || !hubTask.Duration.HasValue) ||
+                hubTask.Duration.Value == 0)
+                return null;
+            
+            var url = $"{_settings.BaseUrl}/tasks/{hubTask}";
+            var task = await GetById(hubTask.RemoteId);
             var sumHoursField = task?.AsanaTaskData.CustomFields
                 .FirstOrDefault(x => x.Name == "sum hours");
             if (sumHoursField == null) return null;
 
-            result.AsanaTaskId = task.AsanaTaskData.Gid;
+            var result = FillHistory(hubTask, task);
+            
             sumHoursField.NumberValue ??= 0;
-            result.SumHoursPreviousValue = sumHoursField.NumberValue.Value;
-            result.HubstaffSumHoursValue = ((decimal) sumSeconds / (decimal) 3600);
-            sumHoursField.NumberValue = result.HubstaffSumHoursValue;
-            result.SumHoursNewValue = sumHoursField.NumberValue;
+            sumHoursField.NumberValue = ((decimal) hubTask.Duration / (decimal) 3600);
             
-            
-            var sumHoursValue = new Dictionary<string, string> {{sumHoursField.Gid, result.SumHoursNewValue.Value.ToString("F1")}};
+            var sumHoursValue = new Dictionary<string, string> {{sumHoursField.Gid, sumHoursField.NumberValue.Value.ToString("F1")}};
             var updateModel = new AsanaTaskUpdateModel
             {
                 Data = new DataCustomFields
@@ -54,27 +50,43 @@ namespace HI.Asana
             };
             
             await url.WithOAuthBearerToken(_settings.Token).PutJsonAsync(updateModel);
-            
-            result.UpdateAt = DateTime.UtcNow;
+
             return result;
         }
         
-        public async Task<UpdateSumFieldsResult> UpdateSumFieldTaskTest(string taskId, long sumSeconds)
+        public async Task<HistoryData> UpdateSumFieldTaskTest(HsTeamMemberTask hubTask)
         {
-            var result = new UpdateSumFieldsResult();
-            var task = await GetById(taskId);
+            if ((string.IsNullOrWhiteSpace(hubTask.RemoteId) || !hubTask.Duration.HasValue) ||
+                hubTask.Duration.Value == 0)
+                return null;
+            
+            var task = await GetById(hubTask.RemoteId);
+            
             var sumHoursField = task?.AsanaTaskData.CustomFields
                 .FirstOrDefault(x => x.Name == "sum hours");
             if (sumHoursField == null) return null;
 
-            result.AsanaTaskId = task.AsanaTaskData.Gid;
-            sumHoursField.NumberValue ??= 0;
-            result.SumHoursPreviousValue = sumHoursField.NumberValue.Value;
-            result.HubstaffSumHoursValue = ((decimal) sumSeconds / (decimal) 3600);
-            sumHoursField.NumberValue = result.HubstaffSumHoursValue;
-            result.SumHoursNewValue = sumHoursField.NumberValue;
-            result.UpdateAt = DateTime.UtcNow;
-            return result;
+            var history = FillHistory(hubTask, task);
+            
+            return history;
+        }
+
+        private HistoryData FillHistory(HsTeamMemberTask hubTask, AsanaTaskModel task)
+        {
+            return new HistoryData
+            {
+                HubId = hubTask.Id,
+                RemoteId = hubTask.RemoteId,
+                Summary = hubTask.Summary,
+                Duration = hubTask.Duration,
+                
+                AsanaId = task.AsanaTaskData?.Gid,
+                Name = task.AsanaTaskData?.Name,
+                AssigneeStatus = task.AsanaTaskData?.AssigneeStatus,
+                Completed = task.AsanaTaskData?.Completed,
+                CompletedAt = task.AsanaTaskData?.CompletedAt,
+                CreatedAt = task.AsanaTaskData?.CreatedAt
+            };
         }
     }
 }
