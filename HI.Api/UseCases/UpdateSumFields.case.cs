@@ -8,7 +8,6 @@ using HI.Hubstaff;
 using HI.SharedKernel;
 using HI.SharedKernel.Errors;
 using HI.SharedKernel.Models;
-using HI.SharedKernel.Models.Responses;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Logging;
 
@@ -38,47 +37,82 @@ namespace HI.Api.UseCases
 
         public async Task<ExecutionResult> Execute(DateTime start, DateTime end)
         {
-            var asanaUpdatedTasks = new List<AsanaTaskModel>();
-            var asanaUpdatedTasksTest = new List<HistoryData>();
+            int updated = 0;
+            int inserted = 0;
+            int error = 0;
+            var asanaUpdatedTasks = new List<HistoryData>();
             // get all tasks by period from hubstaff
             var hubReq = new HsTeamMemberRequest
             {
                 StartDate = start,
                 EndDate = end,
                 ShowTasks = true,
-                ShowActivity = true
+                ShowActivity = false
             };
             var hubTasks = await _hubstaffService.GetTasksDurations(hubReq);
             foreach (var hubTask in hubTasks.Where(hubTask =>
                 (!string.IsNullOrWhiteSpace(hubTask.RemoteId) || hubTask.Duration.HasValue) &&
                 hubTask.Duration.Value != 0))
             {
-                // update asana task
-                var asanaTask = await _asanaService.UpdateSumFieldTaskTest(hubTask);
-                if (asanaTask != null)
-                    asanaUpdatedTasksTest.Add(asanaTask);
-            }
-
-            foreach (var task in asanaUpdatedTasksTest)
-            {
-                var dbTask = await _context.Histories.FirstOrDefaultAsync(x => x.HubId == task.HubId);
-                if (dbTask != null && task.Duration.HasValue && task.Duration.Value == dbTask.Duration)
+                var dbTask = await _context.Histories.FirstOrDefaultAsync(x => x.HubId == hubTask.Id);
+                if (dbTask != null && hubTask.Duration.HasValue && hubTask.Duration.Value == dbTask.Duration &&
+                    dbTask.LastUpdate.Date == DateTime.UtcNow.Date)
                     continue; // no need to update
-                if (dbTask != null)
+
+                // update asana task
+                try
                 {
-                    dbTask.Duration = task.Duration;
-                    _context.Histories.Update(dbTask);
+                    long newDuration = hubTask.Duration.Value;
+                    if (dbTask != null)
+                    {
+                        // if a new day we added time
+                        if (dbTask.LastUpdate.Date < DateTime.UtcNow.Date)
+                        {
+                            dbTask.Duration = hubTask.Duration;
+                            dbTask.YesterdayDuration = dbTask.TotalDuration;
+                            dbTask.TotalDuration += dbTask.Duration.Value;
+                        }
+                        else // else we set new
+                        {
+                            dbTask.Duration = hubTask.Duration;
+                            dbTask.TotalDuration = dbTask.YesterdayDuration + dbTask.Duration.Value;
+                        }
+
+                        newDuration = dbTask.TotalDuration;
+                    }
+                    
+                    var asanaTask = await _asanaService.UpdateSumFieldTask(hubTask, newDuration);
+                    
+                    if (asanaTask != null)
+                    {
+                        asanaUpdatedTasks.Add(asanaTask);
+                        if (dbTask != null)
+                        {
+                            dbTask.LastUpdate = DateTime.UtcNow;
+                            _context.Histories.Update(dbTask);
+                            updated++;
+                        }
+                        else
+                        {
+                            await _context.Histories.AddAsync(asanaTask);
+                            inserted++;
+                        }
+                    }
                 }
-                else
+                catch (Exception e)
                 {
-                    await _context.Histories.AddAsync(task);
+                    _logger.LogError(e.GetBaseException().Message);
+                    error++;
                 }
             }
 
-            await _context.SaveChangesAsync();
+            if (asanaUpdatedTasks.Any())
+                await _context.SaveChangesAsync();
+
+            _logger.LogInformation($"inserted: {inserted}, updated: {updated}, error: {error}");
 
             return asanaUpdatedTasks.Any()
-                ? Success(asanaUpdatedTasksTest)
+                ? Success(asanaUpdatedTasks)
                 : Failure(new UpdateSumFieldsError("tasks not found", 502));
         }
 

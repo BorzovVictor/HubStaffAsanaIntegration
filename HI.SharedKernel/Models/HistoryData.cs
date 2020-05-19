@@ -13,8 +13,9 @@ namespace HI.SharedKernel.Models
         public long? HubId { get; set; }
         public string Summary { get; set; }
         public string RemoteId { get; set; }
+        public long YesterdayDuration { get; set; }
         public long? Duration { get; set; }
-
+        public long TotalDuration { get; set; }
         public string AsanaId { get; set; }
         public string Name { get; set; }
         public string AssigneeStatus { get; set; }

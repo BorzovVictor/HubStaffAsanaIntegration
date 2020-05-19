@@ -63,9 +63,9 @@ namespace HI.Api.Services
                         var storeService = scope.ServiceProvider.GetRequiredService<IJsonStoreService>();
 
                         var startDate = DateTime.Today;
-                        var endDate = startDate.AddDays(1);
+                        var endDate = DateTime.Today.AddDays(1);
                         // todo change to real
-                        var result = updateService.ExecuteNoUpdate(startDate, endDate).Result;
+                        var result = updateService.Execute(startDate, endDate).Result;
                         if (result.Succeded)
                         {
                             storeService.AddRange(result.Success);

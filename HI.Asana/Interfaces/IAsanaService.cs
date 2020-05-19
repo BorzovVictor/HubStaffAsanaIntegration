@@ -7,7 +7,7 @@ namespace HI.Asana
     public interface IAsanaService
     {
         Task<AsanaTaskModel> GetById(string taskId);
-        Task<HistoryData> UpdateSumFieldTask(HsTeamMemberTask hubTask);
+        Task<HistoryData> UpdateSumFieldTask(HsTeamMemberTask hubTask, long duration);
         Task<HistoryData> UpdateSumFieldTaskTest(HsTeamMemberTask hubTask);
     }
 }

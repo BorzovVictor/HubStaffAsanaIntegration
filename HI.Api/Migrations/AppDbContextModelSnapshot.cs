@@ -54,6 +54,12 @@ namespace HI.Api.Migrations
                     b.Property<string>("Summary")
                         .HasColumnType("TEXT");
 
+                    b.Property<long>("TotalDuration")
+                        .HasColumnType("INTEGER");
+
+                    b.Property<long>("YesterdayDuration")
+                        .HasColumnType("INTEGER");
+
                     b.HasKey("Id");
 
                     b.ToTable("Histories");

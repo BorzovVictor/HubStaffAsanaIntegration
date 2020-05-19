@@ -23,24 +23,24 @@ namespace HI.Asana
                 .GetJsonAsync<AsanaTaskModel>();
         }
 
-        public async Task<HistoryData> UpdateSumFieldTask(HsTeamMemberTask hubTask)
+        public async Task<HistoryData> UpdateSumFieldTask(HsTeamMemberTask hubTask, long duration)
         {
-            if ((string.IsNullOrWhiteSpace(hubTask.RemoteId) || !hubTask.Duration.HasValue) ||
-                hubTask.Duration.Value == 0)
+            if ((string.IsNullOrWhiteSpace(hubTask.RemoteId) || duration == 0))
                 return null;
-            
-            var url = $"{_settings.BaseUrl}/tasks/{hubTask}";
+
+            var url = $"{_settings.BaseUrl}/tasks/{hubTask.RemoteId}";
             var task = await GetById(hubTask.RemoteId);
             var sumHoursField = task?.AsanaTaskData.CustomFields
                 .FirstOrDefault(x => x.Name == "sum hours");
             if (sumHoursField == null) return null;
 
             var result = FillHistory(hubTask, task);
-            
+
             sumHoursField.NumberValue ??= 0;
-            sumHoursField.NumberValue = ((decimal) hubTask.Duration / (decimal) 3600);
-            
-            var sumHoursValue = new Dictionary<string, string> {{sumHoursField.Gid, sumHoursField.NumberValue.Value.ToString("F1")}};
+            sumHoursField.NumberValue = ((decimal) duration / (decimal) 3600);
+
+            var sumHoursValue = new Dictionary<string, string>
+                {{sumHoursField.Gid, sumHoursField.NumberValue.Value.ToString("F1")}};
             var updateModel = new AsanaTaskUpdateModel
             {
                 Data = new DataCustomFields
@@ -48,26 +48,26 @@ namespace HI.Asana
                     CustomFields = sumHoursValue
                 }
             };
-            
+
             await url.WithOAuthBearerToken(_settings.Token).PutJsonAsync(updateModel);
 
             return result;
         }
-        
+
         public async Task<HistoryData> UpdateSumFieldTaskTest(HsTeamMemberTask hubTask)
         {
             if ((string.IsNullOrWhiteSpace(hubTask.RemoteId) || !hubTask.Duration.HasValue) ||
                 hubTask.Duration.Value == 0)
                 return null;
-            
+
             var task = await GetById(hubTask.RemoteId);
-            
+
             var sumHoursField = task?.AsanaTaskData.CustomFields
                 .FirstOrDefault(x => x.Name == "sum hours");
             if (sumHoursField == null) return null;
 
             var history = FillHistory(hubTask, task);
-            
+
             return history;
         }
 
@@ -79,7 +79,7 @@ namespace HI.Asana
                 RemoteId = hubTask.RemoteId,
                 Summary = hubTask.Summary,
                 Duration = hubTask.Duration,
-                
+
                 AsanaId = task.AsanaTaskData?.Gid,
                 Name = task.AsanaTaskData?.Name,
                 AssigneeStatus = task.AsanaTaskData?.AssigneeStatus,
