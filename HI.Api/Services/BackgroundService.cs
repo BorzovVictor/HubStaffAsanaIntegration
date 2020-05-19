@@ -66,8 +66,15 @@ namespace HI.Api.Services
                         var endDate = startDate.AddDays(1);
                         // todo change to real
                         var result = updateService.ExecuteNoUpdate(startDate, endDate).Result;
-                        storeService.AddRange(result.Success);
-                        _logger.LogInformation($"sumFields checked. at: {DateTimeOffset.Now}");
+                        if (result.Succeded)
+                        {
+                            storeService.AddRange(result.Success);
+                            _logger.LogInformation($"sumFields checked. at: {DateTimeOffset.Now}");   
+                        }
+                        else
+                        {
+                            _logger.LogError(result.Failure.Message);
+                        }
                     }
                     catch (Exception e)
                     {

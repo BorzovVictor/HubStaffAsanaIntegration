@@ -27,7 +27,8 @@ namespace HI.Api.UseCases
         private readonly AppDbContext _context;
         private ILogger<UpdateSumFieldsCase> _logger;
 
-        public UpdateSumFieldsCase(IAsanaService asanaService, IHubstaffService hubstaffService, AppDbContext context, ILogger<UpdateSumFieldsCase> logger)
+        public UpdateSumFieldsCase(IAsanaService asanaService, IHubstaffService hubstaffService, AppDbContext context,
+            ILogger<UpdateSumFieldsCase> logger)
         {
             _asanaService = asanaService;
             _hubstaffService = hubstaffService;
@@ -132,8 +133,9 @@ namespace HI.Api.UseCases
                 }
             }
 
-            await _context.SaveChangesAsync();
-            
+            if (asanaUpdatedTasksTest.Any())
+                await _context.SaveChangesAsync();
+
             _logger.LogInformation($"inserted: {inserted}, updated: {updated}, error: {error}");
 
             return asanaUpdatedTasksTest.Any()
