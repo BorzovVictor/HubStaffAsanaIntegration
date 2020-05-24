@@ -32,8 +32,6 @@ namespace HI.Hubstaff
 
         private object GetHeaders()
         {
-            if (_settings.AuthToken == null)
-                _settings.AuthToken = "QonAICDuVYa8Kvg4_T0gqP8rWMqFPQBKygW011p3R1c";
             return new {App_token = _settings.AppToken, Auth_Token = _settings.AuthToken};
         }
 
