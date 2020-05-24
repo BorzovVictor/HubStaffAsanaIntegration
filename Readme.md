@@ -8,6 +8,8 @@ Each authenticated user is allowed to make 1000 requests per hour per app.
 
 Authentication requests (/auth) have a lower limit for security reasons. Only 10 requests are allowed per hour per app.
 
+## cron job examples
+
 every 5 min
  - */5 * * * *
 
