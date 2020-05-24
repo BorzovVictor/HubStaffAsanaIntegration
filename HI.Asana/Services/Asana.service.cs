@@ -4,16 +4,19 @@ using System.Threading.Tasks;
 using Flurl.Http;
 using HI.SharedKernel.Models;
 using HI.SharedKernel.Models.Asana;
+using Microsoft.Extensions.Logging;
 
 namespace HI.Asana
 {
     public class AsanaService : IAsanaService
     {
         private readonly AsanaSettings _settings;
+        private readonly ILogger _logger;
 
-        public AsanaService(AsanaSettings settings)
+        public AsanaService(AsanaSettings settings, ILogger<AsanaService> logger)
         {
             _settings = settings;
+            _logger = logger;
         }
 
         public async Task<AsanaTaskModel> GetById(string taskId)
@@ -38,6 +41,45 @@ namespace HI.Asana
 
             sumHoursField.NumberValue ??= 0;
             sumHoursField.NumberValue = ((decimal) duration / (decimal) 3600);
+
+            var sumHoursValue = new Dictionary<string, string>
+                {{sumHoursField.Gid, sumHoursField.NumberValue.Value.ToString("F1")}};
+            var updateModel = new AsanaTaskUpdateModel
+            {
+                Data = new DataCustomFields
+                {
+                    CustomFields = sumHoursValue
+                }
+            };
+
+            await url.WithOAuthBearerToken(_settings.Token).PutJsonAsync(updateModel);
+
+            return result;
+        }
+
+        public async Task<HistoryData> UpdateSumField(HsTeamMemberTask hubTask)
+        {
+            if (string.IsNullOrWhiteSpace(hubTask.RemoteId))
+                return null;
+
+            var url = $"{_settings.BaseUrl}/tasks/{hubTask.RemoteId}";
+            // get asana task by id
+            var task = await GetById(hubTask.RemoteId);
+            // get sum hours field from task
+            var sumHoursField = task?.AsanaTaskData.CustomFields
+                .FirstOrDefault(x => x.Name == "sum hours");
+            if (sumHoursField == null) return null;
+
+            var result = FillHistory(hubTask, task);
+
+            sumHoursField.NumberValue ??= 0; // if sum hours hasn't value set to 0
+
+            var newTime = ((decimal) hubTask.Duration.Value / (decimal) 3600);
+            _logger.LogInformation(
+                $"taskid: {hubTask.RemoteId}, duration: {hubTask.Duration}, sum hours: {sumHoursField.NumberValue}");
+            
+            // increase sum hours on hubstaff duration
+            sumHoursField.NumberValue += newTime;
 
             var sumHoursValue = new Dictionary<string, string>
                 {{sumHoursField.Gid, sumHoursField.NumberValue.Value.ToString("F1")}};

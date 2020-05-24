@@ -17,6 +17,7 @@ namespace HI.Api.UseCases
     {
         Task<UseCase<List<HistoryData>>.ExecutionResult> Execute(DateTime start, DateTime end);
         Task<UseCase<List<HistoryData>>.ExecutionResult> ExecuteNoUpdate(DateTime start, DateTime end);
+        Task<UseCase<List<HistoryData>>.ExecutionResult> ExecuteNoSave(DateTime start, DateTime end);
     }
 
     public class UpdateSumFieldsCase : UseCase<List<HistoryData>>, IUpdateSumFieldsCase
@@ -37,6 +38,7 @@ namespace HI.Api.UseCases
 
         public async Task<ExecutionResult> Execute(DateTime start, DateTime end)
         {
+            throw new NotImplementedException();
             int updated = 0;
             int inserted = 0;
             int error = 0;
@@ -116,6 +118,49 @@ namespace HI.Api.UseCases
                 : Failure(new UpdateSumFieldsError("tasks not found", 502));
         }
 
+        public async Task<ExecutionResult> ExecuteNoSave(DateTime start, DateTime end)
+        {
+            int updated = 0;
+            int error = 0;
+            var asanaUpdatedTasks = new List<HistoryData>();
+            // get all tasks by period from hubstaff
+            var hubReq = new HsTeamMemberRequest
+            {
+                StartDate = start,
+                EndDate = end,
+                ShowTasks = true,
+                ShowActivity = false
+            };
+            var hubTasks = await _hubstaffService.GetTasksDurations(hubReq);
+            foreach (var hubTask in hubTasks.Where(hubTask =>
+                (!string.IsNullOrWhiteSpace(hubTask.RemoteId) || hubTask.Duration.HasValue) &&
+                hubTask.Duration.Value != 0))
+            {
+                // update asana task
+                try
+                {
+                    var asanaTask = await _asanaService.UpdateSumField(hubTask);
+                    
+                    if (asanaTask != null)
+                    {
+                        asanaUpdatedTasks.Add(asanaTask);
+                        updated++;
+                    }
+                }
+                catch (Exception e)
+                {
+                    _logger.LogError(e.GetBaseException().Message);
+                    error++;
+                }
+            }
+
+            _logger.LogInformation($"updated: {updated}, error: {error}");
+
+            return asanaUpdatedTasks.Any()
+                ? Success(asanaUpdatedTasks)
+                : Failure(new UpdateSumFieldsError("tasks not found", 502));
+        }
+        
         public async Task<ExecutionResult> ExecuteNoUpdate(DateTime start, DateTime end)
         {
             int updated = 0;

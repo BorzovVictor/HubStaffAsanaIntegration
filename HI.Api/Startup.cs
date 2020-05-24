@@ -1,4 +1,7 @@
+#nullable enable
+using System.Threading.Tasks;
 using HI.Api.Extensions;
+using HI.Api.Jobs;
 using HI.Api.Services;
 using HI.Asana;
 using HI.Hubstaff;
@@ -8,11 +11,13 @@ using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
+using Microsoft.Extensions.Logging;
 
 namespace HI.Api
 {
     public class Startup
     {
+        private ILogger<Startup>? _logger;
         public Startup(IConfiguration configuration)
         {
             Configuration = configuration;
@@ -46,12 +51,21 @@ namespace HI.Api
 
             services.AddProjectServices();
             
-            services.AddHostedService<HI.Api.Services.BackgroundService>();
+            services.AddScheduler(builder =>
+            {
+                builder.AddJob<UpdateSumFieldJob, UpdateSumFieldJobOptions>();
+
+                builder.UnobservedTaskExceptionHandler = UnobservedHandler;
+            });
+            
+            // services.AddHostedService<HI.Api.Services.BackgroundService>();
         }
 
         // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.
-        public void Configure(IApplicationBuilder app, IWebHostEnvironment env)
+        public void Configure(IApplicationBuilder app, IWebHostEnvironment env, ILoggerFactory loggerFactory)
         {
+            _logger = loggerFactory.CreateLogger<Startup>();
+            
             if (env.IsDevelopment())
             {
                 app.UseDeveloperExceptionPage();
@@ -64,6 +78,12 @@ namespace HI.Api
             app.UseAuthorization();
 
             app.UseEndpoints(endpoints => { endpoints.MapControllers(); });
+        }
+        
+        private void UnobservedHandler(object sender, UnobservedTaskExceptionEventArgs args)
+        {
+            _logger?.LogError(args.Exception?.Message);
+            args.SetObserved();
         }
     }
 }

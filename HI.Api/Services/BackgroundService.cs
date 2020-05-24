@@ -3,7 +3,6 @@ using System.Threading;
 using System.Threading.Tasks;
 using HI.Api.UseCases;
 using HI.Hubstaff;
-using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
 using Microsoft.Extensions.Logging;
@@ -29,6 +28,7 @@ namespace HI.Api.Services
 
         public Task StartAsync(CancellationToken cancellationToken)
         {
+            throw new NotImplementedException();
             _logger.LogInformation("Background Service is starting.");
             
             _updateSumHoursFieldTimer = new Timer(UpdateSumHoursFieldWork, null, TimeSpan.Zero,

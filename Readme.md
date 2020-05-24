@@ -7,3 +7,13 @@ In order to protect against excessive use of the API and ensure availability to 
 Each authenticated user is allowed to make 1000 requests per hour per app.
 
 Authentication requests (/auth) have a lower limit for security reasons. Only 10 requests are allowed per hour per app.
+
+every 5 min
+ - */5 * * * *
+
+
+ every day at 00:05:00 UTC
+ - 0 5 * * *
+ 
+ every day at 21:05:00 UTC
+ - 5 21 * * *

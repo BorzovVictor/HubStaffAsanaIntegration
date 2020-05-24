@@ -8,6 +8,7 @@ namespace HI.Asana
     {
         Task<AsanaTaskModel> GetById(string taskId);
         Task<HistoryData> UpdateSumFieldTask(HsTeamMemberTask hubTask, long duration);
+        Task<HistoryData> UpdateSumField(HsTeamMemberTask hubTask);
         Task<HistoryData> UpdateSumFieldTaskTest(HsTeamMemberTask hubTask);
     }
 }
