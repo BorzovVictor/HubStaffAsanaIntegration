@@ -46,7 +46,6 @@ namespace HI.Api.Controllers
             try
             {
                 var result = await service.GetTasksDurations(req);
-                
                 return Ok(result);
             }
             catch (Exception e)

@@ -32,6 +32,8 @@ namespace HI.Hubstaff
 
         private object GetHeaders()
         {
+            if (string.IsNullOrWhiteSpace(_settings.AuthToken))
+                GenAuth().Wait();
             return new {App_token = _settings.AppToken, Auth_Token = _settings.AuthToken};
         }
 

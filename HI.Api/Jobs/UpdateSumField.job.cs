@@ -31,7 +31,7 @@ namespace HI.Api.Jobs
             {
                 var updateService = scope.ServiceProvider.GetRequiredService<IUpdateSumFieldsCase>();
 
-                var startDate = DateTime.Today.AddDays(-1);
+                var startDate = DateTime.Today;
                 var endDate = startDate;
 
                 var result = await updateService.ExecuteNoSave(startDate, endDate);
